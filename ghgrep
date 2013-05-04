@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+from sys import argv
+
+from pygithub3 import Github
+
+pattern = argv[1]
+gh = Github(login='xiongchiamiov', password='nope')
+for page in gh.repos.list():
+   for repo in page:
+      ref = gh.git_data.references.get('heads/'+repo.default_branch,
+                                       user=repo.owner.login,
+                                       repo=repo.name)
+      head = ref.object['sha']
+      tree = gh.git_data.trees.get(head,
+                                   user=repo.owner.login,
+                                   repo=repo.name)
+      for entry in tree.tree:
+         if entry['path'] == pattern:
+            print(repo.name)
+            break
+
