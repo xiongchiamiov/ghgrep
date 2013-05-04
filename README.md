@@ -2,15 +2,15 @@ Search through your Github repositories.
 
 # Examples
 
+Show all repositories with a readme:
+
     ghgrep 'README(.*)'
 
-Show all repositories with a readme.
+List all repositories that have a file named 'COPYING':
 
     ghgrep -F COPYING
 
-List all repositories that have a file named 'COPYING'.
+List all repositories that don't have a license file:
 
     ghgrep -v (COPYING|LICENSE)
-
-List all repositories that don't have a license file.
 
