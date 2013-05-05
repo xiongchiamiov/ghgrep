@@ -2,12 +2,37 @@
 
 from sys import argv
 
-from github3 import login, GitHub
+from envoy import run
+from github3 import authorize, login, GitHub
 
 pattern = argv[1]
-gh = login('xiongchiamiov', 'nope')
+
+# Use a stored OAuth token so we don't have to ask for the user's password
+# every time (or save the password on disk!).
+token = run('git config --global ghgrep.token').std_out.strip()
+if not token:
+   from getpass import getpass
+   user = password = ''
+
+   while not user:
+      user = raw_input('Username: ')
+   while not password:
+      password = getpass('Password: ')
+
+   auth = authorize(user, password,
+                    scopes=['repo'],
+                    note='ghgrep',
+                    note_url='https://github.com/xiongchiamiov/ghgrep')
+   token = auth.token
+   # We need to un-unicode token for now.
+   # https://github.com/kennethreitz/envoy/issues/34
+   run("git config --global ghgrep.token '%s'" % str(token))
+gh = login(token=token)
+
 for repo in gh.iter_repos():
    branch = repo.master_branch
+   # Getting blank strings when we shouldn't be.
+   # https://github.com/sigmavirus24/github3.py/pull/102
    if branch == '':
       branch = 'master'
    ref = repo.ref('heads/'+branch)
