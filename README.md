@@ -1,4 +1,9 @@
-Search through your Github repositories.
+List all your Github repositories containing a filename matching a search
+pattern.
+
+`ghgrep` is partially `grep -l` and partially `find -name` - you can pretend it
+is a special version of `grep(1)` in which files are actually repositories and
+each line of a file is actually a filename inside the repository.
 
 # Examples
 
