@@ -2,13 +2,14 @@
 '''ghgrep
 
 Usage:
-   ghgrep <pattern>
+   ghgrep [options] <pattern>
    ghgrep (-h | --help)
    ghgrep --version
 
 Options:
-   -h --help         Show this screen.
-      --version      Show version.
+   -h --help          Show this screen.
+      --version       Show version.
+   -v --invert-match  Show non-matching repos instead of those that match.
 '''
 
 # May you recognize your weaknesses and share your strengths.
@@ -25,6 +26,9 @@ from ghgrep import VERSION
 
 arguments = docopt(__doc__, version='ghgrep %s' % VERSION)
 pattern = arguments['<pattern>']
+# We need to force this to a bool because when not specified, the argument in
+# None, and xor (^) isn't defined for None.
+invertMatch = bool(arguments['--invert-match'])
 
 # Use a stored OAuth token so we don't have to ask for the user's password
 # every time (or save the password on disk!).
@@ -58,7 +62,7 @@ for repo in gh.iter_repos():
    head = ref.object.sha
    tree = repo.tree(head)
    for entry in tree.tree:
-      if entry.path == pattern:
+      if (entry.path == pattern) ^ invertMatch:
          print(repo.name)
          break
 
