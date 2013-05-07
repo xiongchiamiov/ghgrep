@@ -17,7 +17,7 @@ from docopt import docopt
 from envoy import run
 from github3 import authorize, login, GitHub
 
-from version import VERSION
+from ghgrep import VERSION
 
 arguments = docopt(__doc__, version='ghgrep %s' % VERSION)
 pattern = arguments['<pattern>']
