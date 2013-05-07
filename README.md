@@ -7,6 +7,9 @@ each line of a file is actually a filename inside the repository.
 
 # Examples
 
+`ghgrep` is still in development; don't expect it to actually do these things
+yet.
+
 Show all repositories with a readme:
 
     ghgrep 'README(.*)'
