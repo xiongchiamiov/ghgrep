@@ -16,13 +16,20 @@ Options:
 # May you share freely, never taking more than you give.
 # May you find love and love everyone you find.
 
-from sys import argv
+import signal
+import sys
 
 from docopt import docopt
 from envoy import run
 from github3 import authorize, login, GitHub
 
 from ghgrep import VERSION
+
+# Stack traces are ugly; why would we want to print one on ctrl-c?
+def nice_sigint(signal, frame):
+   print("")
+   sys.exit(0)
+signal.signal(signal.SIGINT, nice_sigint)
 
 arguments = docopt(__doc__, version='ghgrep %s' % VERSION)
 pattern = arguments['<pattern>']
