@@ -7,9 +7,10 @@ Usage:
    ghgrep --version
 
 Options:
-   -h --help          Show this screen.
-      --version       Show version.
-   -v --invert-match  Show non-matching repos instead of those that match.
+   -h --help           Show this screen.
+      --version        Show version.
+   -f --fixed-strings  Interpret pattern as a fixed string instead of a regex.
+   -v --invert-match   Show non-matching repos instead of those that match.
 '''
 
 # May you recognize your weaknesses and share your strengths.
@@ -33,6 +34,11 @@ signal.signal(signal.SIGINT, nice_sigint)
 
 arguments = docopt(__doc__, version='ghgrep %s' % VERSION)
 pattern = arguments['<pattern>']
+if arguments['--fixed-strings']:
+   matcher = lambda filename: filename == pattern
+else:
+   from re import match
+   matcher = lambda filename: bool(match(pattern, filename))
 # We need to force this to a bool because when not specified, the argument in
 # None, and xor (^) isn't defined for None.
 invertMatch = bool(arguments['--invert-match'])
@@ -69,7 +75,7 @@ for repo in gh.iter_repos():
    head = ref.object.sha
    tree = repo.tree(head)
    for entry in tree.tree:
-      if (entry.path == pattern) ^ invertMatch:
+      if matcher(entry.path) ^ invertMatch:
          print(repo.name)
          break
 
