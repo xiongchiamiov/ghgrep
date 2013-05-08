@@ -7,16 +7,13 @@ each line of a file is actually a filename inside the repository.
 
 # Examples
 
-`ghgrep` is still in development; don't expect it to actually do these things
-yet.
-
 Show all repositories with a readme:
 
-    ghgrep 'README(.*)'
+    ghgrep 'README.*'
 
 List all repositories that have a file named 'COPYING':
 
-    ghgrep -F COPYING
+    ghgrep -f COPYING
 
 List all repositories that don't have a license file:
 
@@ -29,6 +26,13 @@ List all repositories that don't have a license file:
 or
 
     [$]> easy_install ghgrep
+
+# Caveats
+
+`ghgrep` will fail if you have any repositories without a branch named
+'master'.  This is due to [a bug] in an upstream dependency.
+
+[a bug]: https://github.com/sigmavirus24/github3.py/pull/102
 
 # Hacking
 
