@@ -39,9 +39,9 @@ if arguments['--fixed-strings']:
 else:
    from re import match
    matcher = lambda filename: bool(match(pattern, filename))
-# We need to force this to a bool because when not specified, the argument in
-# None, and xor (^) isn't defined for None.
-invertMatch = bool(arguments['--invert-match'])
+if arguments['--invert-match']:
+   oldMatcher = matcher
+   matcher = lambda filename: not oldMatcher(filename)
 
 # Use a stored OAuth token so we don't have to ask for the user's password
 # every time (or save the password on disk!).
@@ -75,7 +75,7 @@ for repo in gh.iter_repos():
    head = ref.object.sha
    tree = repo.tree(head)
    for entry in tree.tree:
-      if matcher(entry.path) ^ invertMatch:
+      if matcher(entry.path):
          print(repo.name)
          break
 
