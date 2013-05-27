@@ -27,13 +27,6 @@ or
 
     [$]> easy_install ghgrep
 
-# Caveats
-
-`ghgrep` will fail if you have any repositories without a branch named
-'master'.  This is due to [a bug] in an upstream dependency.
-
-[a bug]: https://github.com/sigmavirus24/github3.py/pull/102
-
 # Hacking
 
 I highly recommend using virtualenv:

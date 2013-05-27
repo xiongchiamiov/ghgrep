@@ -66,11 +66,7 @@ if not token:
 gh = login(token=token)
 
 for repo in gh.iter_repos():
-   branch = repo.master_branch
-   # Getting blank strings when we shouldn't be.
-   # https://github.com/sigmavirus24/github3.py/pull/102
-   if branch == '':
-      branch = 'master'
+   branch = repo.default_branch
    ref = repo.ref('heads/'+branch)
    head = ref.object.sha
    tree = repo.tree(head)

@@ -28,7 +28,7 @@ setup(
    install_requires = [
       'docopt >= 0.6.1',
       'envoy >= 0.0.2',
-      'github3.py >= 0.6.1, < 0.7',
+      'github3.py >= 0.7, < 0.8',
    ],
 )
 
