@@ -39,9 +39,6 @@ if arguments['--fixed-strings']:
 else:
    from re import match
    matcher = lambda filename: bool(match(pattern, filename))
-if arguments['--invert-match']:
-   oldMatcher = matcher
-   matcher = lambda filename: not oldMatcher(filename)
 
 # Use a stored OAuth token so we don't have to ask for the user's password
 # every time (or save the password on disk!).
@@ -70,8 +67,14 @@ for repo in gh.iter_repos():
    ref = repo.ref('heads/'+branch)
    head = ref.object.sha
    tree = repo.tree(head)
+   
    for entry in tree.tree:
       if matcher(entry.path):
-         print(repo.name)
+         if not arguments['--invert-match']:
+            print(repo.name)
          break
+   else: # That is, "and also":
+      #    http://nedbatchelder.com/blog/201110/forelse.html
+      if arguments['--invert-match']:
+         print(repo.name)
 
